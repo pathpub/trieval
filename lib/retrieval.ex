@@ -1,7 +1,7 @@
-defmodule Retrieval do
+defmodule Trieval do
 
-  alias Retrieval.Trie
-  alias Retrieval.PatternParser
+  alias Trieval.Trie
+  alias Trieval.PatternParser
 
   @moduledoc """
   Provides an interface for creating and collecting data from the trie data structure.
@@ -13,14 +13,14 @@ defmodule Retrieval do
 
   ## Examples
 
-        Retrieval.new
-        %Retrieval.Trie{...}
+        Trieval.new
+        %Trieval.Trie{...}
 
-        Retrieval.new("apple")
-        %Retrieval.Trie{...}
+        Trieval.new("apple")
+        %Trieval.Trie{...}
 
-        Retrieval.new(~w/apple apply ape ample/)
-        %Retrieval.Trie{...}
+        Trieval.new(~w/apple apply ape ample/)
+        %Trieval.Trie{...}
 
   """
 
@@ -39,11 +39,11 @@ defmodule Retrieval do
 
   ## Examples
 
-        Retrieval.new |> Retrieval.insert("apple")
-        %Retrieval.Trie{...}
+        Trieval.new |> Trieval.insert("apple")
+        %Trieval.Trie{...}
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.insert(~w/zebra corgi/)
-        %Retrieval.Trie{...}
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.insert(~w/zebra corgi/)
+        %Trieval.Trie{...}
 
   """
 
@@ -71,10 +71,10 @@ defmodule Retrieval do
 
   ## Examples
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.contains?("apple")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.contains?("apple")
         true
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.contains?("zebra")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.contains?("zebra")
         false
 
   """
@@ -103,10 +103,10 @@ defmodule Retrieval do
 
   ## Examples
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.prefix("ap")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.prefix("ap")
         ["apple", "apply", "ape"]
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.prefix("z")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.prefix("z")
         []
 
   """
@@ -151,19 +151,19 @@ defmodule Retrieval do
 
   ## Examples
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.pattern("a{1}{1}**")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.pattern("a{1}{1}**")
         ["apple", "apply"]
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.pattern("*{1[^p]}{1}**")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.pattern("*{1[^p]}{1}**")
         []
 
-        Retrieval.new(~w/apple apply zebra house/) |> Retrieval.pattern("[hz]****")
+        Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]****")
         ["house", "zebra"]
 
-        Retrieval.new(~w/apple apply zebra house/) |> Retrieval.pattern("[hz]***[^ea]")
+        Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]***[^ea]")
         []
 
-        Retrieval.new(~w/apple apply zebra house/) |> Retrieval.pattern("[hz]***[^ea")
+        Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]***[^ea")
         {:error, "Dangling group (exclusion) starting at column 8, expecting ]"}
 
   """

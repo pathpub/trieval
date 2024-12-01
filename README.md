@@ -1,7 +1,7 @@
-# Retrieval [![Build Status](https://travis-ci.org/Rob-bie/retrieval.svg?branch=master)](https://travis-ci.org/Rob-bie/retrieval)
+# Trieval
 
-Retrieval is a tradional trie implementation in pure Elixir that supports pattern based lookup and a variety
-of other functionality. Documentation can be found [HERE](https://hexdocs.pm/retrieval/Retrieval.html).
+Trieval is a tradional trie implementation in pure Elixir that supports pattern based lookup and a variety
+of other functionality. Documentation can be found [HERE](https://hexdocs.pm/trieval/Trieval.html).
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -19,11 +19,11 @@ of other functionality. Documentation can be found [HERE](https://hexdocs.pm/ret
 
 ## Installation
 
-Add Retrieval to your `mix.exs` dependencies:
+Add Trieval to your `mix.exs` dependencies:
 
 ```elixir
 def deps do
-  [{:retrieval, "~> 1.0.0"}]
+  [{:trieval, "~> 1.0.0"}]
 end
 ```
 
@@ -35,20 +35,20 @@ There's three ways to create a new trie struct. Provide zero arguments to create
 provide a binary key or list of binary keys to create a trie with nodes.
 
 ```elixir
-Retrieval.new
-%Retrieval.Trie{trie: ...}
+Trieval.new
+%Trieval.Trie{trie: ...}
 
-Retrieval.new("example")
-%Retrieval.Trie{trie: ...}
+Trieval.new("example")
+%Trieval.Trie{trie: ...}
 
-Retrieval.new(~w/this is an example/)
-%Retrieval.Trie{trie: ...}
+Trieval.new(~w/this is an example/)
+%Trieval.Trie{trie: ...}
 ```
 
 For the rest of our examples we are going to assume we have created the following trie:
 
 ```elixir
-trie = Retrieval.new(~w/apple apply ape bed between betray cat noon hot
+trie = Trieval.new(~w/apple apply ape bed between betray cat noon hot
                         warm winter boob smash crush under above people
                         negative poison place out divide zebra extended/)
 ```
@@ -59,9 +59,9 @@ Just like creating a new trie you can either provide a single binary key or a li
 insertion.
 
 ```elixir
-Retrieval.insert(trie, "elephant")
-|> Retrieval.insert("banana")
-|> Retrieval.insert(~w/cheese orange alchemy/)
+Trieval.insert(trie, "elephant")
+|> Trieval.insert("banana")
+|> Trieval.insert(~w/cheese orange alchemy/)
 ```
 
 ##### Key membership
@@ -69,13 +69,13 @@ Retrieval.insert(trie, "elephant")
 Checking if a trie contains a binary key is quick and easy.
 
 ```elixir
-Retrieval.contains?(trie, "apple")
+Trieval.contains?(trie, "apple")
 true
 
-Retrieval.contains?(trie, "extended")
+Trieval.contains?(trie, "extended")
 true
 
-Retrieval.contains?(trie, "doodle")
+Trieval.contains?(trie, "doodle")
 false
 ```
 
@@ -84,34 +84,34 @@ false
 Looking up all binary keys that begin with a certain prefix is very common.
 
 ```elixir
-Retrieval.prefix(trie, "a")
+Trieval.prefix(trie, "a")
 ["above", "ape", "apple", "apply"]
 
-Retrieval.prefix(trie, "app")
+Trieval.prefix(trie, "app")
 ["apple", "apply"]
 
-Retrieval.prefix(trie, "be")
+Trieval.prefix(trie, "be")
 ["bed", "betray", "between"]
 
-Retrieval.prefix(trie, "th")
+Trieval.prefix(trie, "th")
 []
 ```
 
 ##### Pattern lookup
 
-Retrieval supports a variety of patterns that can be arbitrarily combined. Erroneous patterns
+Trieval supports a variety of patterns that can be arbitrarily combined. Erroneous patterns
 return a tuple of the form `{:error, reason}`.
 
 ###### Wildcard
 
-The wildcard pattern `*` simply matches on *any* character.
+The wildcard pattern `*` simply matches on _any_ character.
 
 ```elixir
 # Three letter word
 # "*" - Matches any character
 # "p" - Matches "p"
 # "e" - Matches "e"
-Retrieval.pattern(trie, "*pe")
+Trieval.pattern(trie, "*pe")
 ["ape"]
 
 # Five letter word
@@ -120,40 +120,40 @@ Retrieval.pattern(trie, "*pe")
 # "*" - Matches any character
 # "*" - Matches any character
 # "y" - Matches "y"
-Retrieval.pattern(trie, "a***y")
+Trieval.pattern(trie, "a***y")
 ["apply"]
 
 # Three letter word
 # "*" - Matches any character
 # "*" - Matches any character
 # "*" - Matches any character
-Retrieval.pattern(trie, "***")
+Trieval.pattern(trie, "***")
 ["ape", "bed", "cat", "hot", "out"]
 
 # "*" - Matches any character
 # "n" - Matches "n"
 # Two letter word that ends with "n"
-Retrieval.pattern(trie, "*n")
+Trieval.pattern(trie, "*n")
 []
 ```
 
 ###### Inclusion group
 
-The inclusion group pattern `[...]` matches on any character *inside of the brackets*.
+The inclusion group pattern `[...]` matches on any character _inside of the brackets_.
 
 ```elixir
 # Three letter word
 # "[ab]" - Matches "a" or "b"
 # "*"    - Matches any character
 # "*"    - Matches any character
-Retrieval.pattern(trie, "[ab]**")
+Trieval.pattern(trie, "[ab]**")
 ["ape", "bed"]
 
 # Three letter word
 # "[ab]" - Matches "a" or "b"
 # "*"    - Matches any character
 # "d"    - Matches "d"
-Retrieval.pattern(trie, "[ab]*d")
+Trieval.pattern(trie, "[ab]*d")
 ["bed"]
 
 # Five letter word
@@ -162,7 +162,7 @@ Retrieval.pattern(trie, "[ab]*d")
 # "*"     - Matches any character
 # "*"     - Matches any character
 # "[ea]"  - Matches "e" or "a"
-Retrieval.pattern(trie, "[abz][eb]**[ea]")
+Trieval.pattern(trie, "[abz][eb]**[ea]")
 ["above", "zebra"]
 
 # Four letter word
@@ -170,17 +170,17 @@ Retrieval.pattern(trie, "[abz][eb]**[ea]")
 # "*"      - Matches any character
 # "*"      - Matches any character
 # "*"      - Matches any character
-Retrieval.pattern(trie, "[yxzo]***")
+Trieval.pattern(trie, "[yxzo]***")
 []
 
 # Oh no, a bad pattern
-Retrieval.pattern(trie, "[abc][ezf")
+Trieval.pattern(trie, "[abc][ezf")
 {:error, "Dangling group (inclusion) starting at column 6, expecting ]"}
 ```
 
 ###### Exclusion group
 
-The exclusion group pattern `[^...]` matches on any character *not inside of the brackets*.
+The exclusion group pattern `[^...]` matches on any character _not inside of the brackets_.
 
 ```elixir
 # Five letter word
@@ -189,7 +189,7 @@ The exclusion group pattern `[^...]` matches on any character *not inside of the
 # "*"     - Matches any character
 # "*"     - Matches any character
 # "[ea]"  - Matches "e" or "a"
-Retrieval.pattern(trie, "[abz][^eb]**[ea]")
+Trieval.pattern(trie, "[abz][^eb]**[ea]")
 ["apple"]
 
 # Six letter word
@@ -199,18 +199,18 @@ Retrieval.pattern(trie, "[abz][^eb]**[ea]")
 # "*"     - Matches any character
 # "[^od]" - Matches any character but "o" or "d"
 # "*"     - Matches any character
-Retrieval.pattern(trie, "[pd]***[^od]*")
+Trieval.pattern(trie, "[pd]***[^od]*")
 ["people"]
 
 # Three letter word
 # "[^abc]" - Matches any character but "a", "b", or, "c"
 # "*"      - Matches any character
 # "*"      - Matches any character
-Retrieval.pattern(trie, "[^abc]**")
+Trieval.pattern(trie, "[^abc]**")
 ["hot", "out"]
 
 # Oh no, a bad pattern
-Retrieval.pattern(trie, "[^abc")
+Trieval.pattern(trie, "[^abc")
 {:error, "Dangling group (exclusion) starting at column 1, expecting ]"}
 ```
 
@@ -231,7 +231,7 @@ the closing curly brace. In the event that a pattern is provided that doesn't fo
 # "{2}" - Matches any character captured by initial capture group "{2}"
 # "{1}" - Matches any character captured by initial capture group "{1}"
 # You may have recognized that this pattern is for searching for four letter palindromes, neat!
-Retrieval.pattern(trie, "{1}{2}{2}{1}")
+Trieval.pattern(trie, "{1}{2}{2}{1}")
 ["boob", "noon"]
 
 # Four letter word
@@ -240,7 +240,7 @@ Retrieval.pattern(trie, "{1}{2}{2}{1}")
 # "{2}"      - Matches any character captured by initial capture group "{2}"
 # "{1}"      - Matches any character captured by initial capture group "{1}"
 # Notice that it no longer accepts "noon" because of the exclusion of "n" in capture group "{1}"
-Retrieval.pattern(trie, "{1[^nm]}{2[oe]}{2}{1}")
+Trieval.pattern(trie, "{1[^nm]}{2[oe]}{2}{1}")
 ["boob"]
 
 # Eight letter word
@@ -255,21 +255,22 @@ Retrieval.pattern(trie, "{1[^nm]}{2[oe]}{2}{1}")
 # In English, find a size eight binary that has the same character in the first, fourth, and seventh position
 # Additionally, it must have the same character in the sixth and eighth position
 # The rest are wildcards, shove anything that fits in between
-Retrieval.pattern(trie, "{aa}**{aa}*{b}{aa}{b}")
+Trieval.pattern(trie, "{aa}**{aa}*{b}{aa}{b}")
 ["extended"]
 
 # Oh no, a bad pattern
-Retrieval.pattern(trie, "{}**{aa}*{b}{aa}{b}")
+Trieval.pattern(trie, "{}**{aa}*{b}{aa}{b}")
 {:error, "Unnamed capture starting at column 1, capture cannot be empty"}
 
 # Oh no, a bad pattern
-Retrieval.pattern(trie, "{aa}**{aa}*{b}{aa}{b")
+Trieval.pattern(trie, "{aa}**{aa}*{b}{aa}{b")
 {:error, "Dangling group (capture) starting at column 19, expecting }"}
 
 # Oh no, a bad pattern
-Retrieval.pattern(trie, "{aa[^abc]a}**{aa}*{b}{aa}{b}")
+Trieval.pattern(trie, "{aa[^abc]a}**{aa}*{b}{aa}{b}")
 {:error, "Group (exclusion) must in the tail position of capture starting at column 4"}
 ```
+
 ###### Escaping pattern symbols
 
 You may have been wondering if it's possible to match on pattern symbols to find binaries that contain the wildcard `*`,
@@ -278,14 +279,14 @@ reserved symbols to be used directly in patterns.
 
 The following symbols can be escaped:
 
-| Symbol  | Escaped symbol |
-| :-------------: | :-------------: |
-| * | \\\\* |
-| ^ | \\\\^ |
-| [ | \\\\[ |
-| ] | \\\\] |
-| { | \\\\{ |
-| } | \\\\} |
+| Symbol | Escaped symbol |
+| :----: | :------------: |
+|   \*   |     \\\\\*     |
+|   ^    |     \\\\^      |
+|   [    |     \\\\[      |
+|   ]    |     \\\\]      |
+|   {    |     \\\\{      |
+|   }    |     \\\\}      |
 
 And in action:
 
@@ -294,24 +295,24 @@ And in action:
 # "\\*" - Matches "*"
 # "*"   - Matches any character
 # "*"   - Matches any character
-Retrieval.new(~w/*ab [x*/) |> Retrieval.pattern("\\***")
+Trieval.new(~w/*ab [x*/) |> Trieval.pattern("\\***")
 ["*ab"]
 
 # Three letter word
 # "[\\*\\[]" - Matches "*" or "["
 # "*"        - Matches any character
 # "*"        - Matches any character
-Retrieval.new(~w/*ab [x*/) |> Retrieval.pattern("[\\*\\[]**")
+Trieval.new(~w/*ab [x*/) |> Trieval.pattern("[\\*\\[]**")
 ["*ab", "[x*"]
 
 # Oh no, a bad pattern
-Retrieval.new(~w/*ab [x*/) |> Retrieval.pattern("[*]**")
+Trieval.new(~w/*ab [x*/) |> Trieval.pattern("[*]**")
 {:error, "Unescaped symbol * at column 2"}
 ```
 
 ## License
 
-Originally written by [Rob-bie](https://github.com/Rob-bie/retrieval/)
+Originally Retrieval, written by [Rob-bie](https://github.com/Rob-bie/retrieval/)
 
 Updated by the team at [pathpub](https://path.pub)
 

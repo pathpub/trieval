@@ -1,8 +1,8 @@
-defmodule Retrieval.Mixfile do
+defmodule Trieval.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :retrieval,
+    [app: :trieval,
      version: "1.0.0",
      elixir: "~> 1.17",
      description: "Trie implementation in pure Elixir that supports pattern based lookup and other functionality.",
@@ -25,7 +25,7 @@ defmodule Retrieval.Mixfile do
     [
       licenses: ["MIT"],
       maintainers: ["jimmybot, mdg"],
-      links: %{github: "https://github.com/pathpub/retrieval"}
+      links: %{github: "https://github.com/pathpub/trieval"}
     ]
   end
 end

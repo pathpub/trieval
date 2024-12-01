@@ -1,4 +1,4 @@
-defmodule Retrieval.Trie do
+defmodule Trieval.Trie do
 
   @moduledoc """
   A tiny struct to encapsulate a trie.

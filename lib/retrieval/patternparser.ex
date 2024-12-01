@@ -1,4 +1,4 @@
-defmodule Retrieval.PatternParser do
+defmodule Trieval.PatternParser do
 
   @moduledoc """
   Parses and verifies patterns that can be matched against the trie data structure.
