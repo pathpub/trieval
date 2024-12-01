@@ -3,13 +3,13 @@ defmodule Retrieval.Mixfile do
 
   def project do
     [app: :retrieval,
-     version: "0.9.1",
-     elixir: "~> 1.2",
-     description: description,
-     package: package,
+     version: "1.0.0",
+     elixir: "~> 1.17",
+     description: "Trie implementation in pure Elixir that supports pattern based lookup and other functionality.",
+     package: package(),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps()]
   end
 
   def application do
@@ -17,19 +17,15 @@ defmodule Retrieval.Mixfile do
   end
 
   defp deps do
-    [{:earmark, "~> 0.1", only: :dev},
-     {:ex_doc, "~> 0.11", only: :dev}]
-  end
-
-  def description do
-    "Trie implementation in pure Elixir that supports pattern based lookup and other functionality."
+    [{:earmark, "~> 1.4", only: :dev},
+     {:ex_doc, "~> 0.35", only: :dev}]
   end
 
   defp package do
     [
       licenses: ["MIT"],
-      maintainers: ["Robbie D."],
-      links: %{github: "https://github.com/Rob-bie/retrieval"}
+      maintainers: ["jimmybot, mdg"],
+      links: %{github: "https://github.com/pathpub/retrieval"}
     ]
   end
 end

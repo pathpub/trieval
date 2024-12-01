@@ -15,7 +15,6 @@ of other functionality. Documentation can be found [HERE](https://hexdocs.pm/ret
     - [Exclusion group](#exclusion-group)
     - [Capture group](#capture-group)
     - [Escaping pattern symbols](#escaping-pattern-symbols)
-- [Rambling](#rambling)
 - [License](#license)
 
 ## Installation
@@ -24,7 +23,7 @@ Add Retrieval to your `mix.exs` dependencies:
 
 ```elixir
 def deps do
-  [{:retrieval, "~> 0.9.1"}]
+  [{:retrieval, "~> 1.0.0"}]
 end
 ```
 
@@ -310,11 +309,11 @@ Retrieval.new(~w/*ab [x*/) |> Retrieval.pattern("[*]**")
 {:error, "Unescaped symbol * at column 2"}
 ```
 
-## Rambling
-
-Will ramble later!
-
 ## License
+
+Originally written by [Rob-bie](https://github.com/Rob-bie/retrieval/)
+
+Updated by the team at [pathpub](https://path.pub)
 
 ```
 This work is free. You can redistribute it and/or modify it under the
