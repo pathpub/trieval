@@ -10,7 +10,7 @@ defmodule TrievalTest do
 
   @payload_trie Enum.map(@test_data, fn item = <<first, _ :: binary>> ->
     {item, <<first>>}
-  end) |> Retrieval.new
+  end) |> Trieval.new
 
 
   test "empty trie" do
@@ -46,16 +46,16 @@ defmodule TrievalTest do
   end
 
   test "payload prefix" do
-    assert Retrieval.prefix(@payload_trie, "app") == [{"apple", "a"}, {"apply", "a"}]
-    assert Retrieval.prefix(@payload_trie, "n")   == [{"negative", "n"}]
-    assert Retrieval.prefix(@payload_trie, "abc") == []
+    assert Trieval.prefix(@payload_trie, "app") == [{"apple", "a"}, {"apply", "a"}]
+    assert Trieval.prefix(@payload_trie, "n")   == [{"negative", "n"}]
+    assert Trieval.prefix(@payload_trie, "abc") == []
   end
 
   test "payload pattern" do
-    assert Retrieval.pattern(@payload_trie, "*{1}{1}**") == [{"apple", "a"}, {"apply", "a"}]
-    assert Retrieval.pattern(@payload_trie, "[^abc]{1}{1}**") == []
-    assert Retrieval.pattern(@payload_trie, "[co]**") == [{"cat", "c"}, {"out", "o"}]
-    assert Retrieval.pattern(@payload_trie, "{1[^okjh]}x[tnm]{1}*{2}{1}{2}") == [{"extended", "e"}]
+    assert Trieval.pattern(@payload_trie, "*{1}{1}**") == [{"apple", "a"}, {"apply", "a"}]
+    assert Trieval.pattern(@payload_trie, "[^abc]{1}{1}**") == []
+    assert Trieval.pattern(@payload_trie, "[co]**") == [{"cat", "c"}, {"out", "o"}]
+    assert Trieval.pattern(@payload_trie, "{1[^okjh]}x[tnm]{1}*{2}{1}{2}") == [{"extended", "e"}]
   end
 
 end
