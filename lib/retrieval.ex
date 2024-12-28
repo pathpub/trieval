@@ -134,39 +134,39 @@ defmodule Trieval do
 
   @doc """
   Collects all binaries that begin with a given prefix. Returns matching binaries, along
-  with matching binaries' longest common prefix.
+  with matching binaries' longest common prefix. Example use-case would be for auto-completion.
 
   ## Examples
 
-        Retrieval.new(~w/apple apply ape/) |> Retrieval.prefix!("a")
+        Trieval.new(~w/apple apply ape/) |> Trieval.longest_common_prefix("a")
         {"ap", ["apple", "apply", "ape"]}
 
-        Retrieval.new(~w/apple apply ape ample/) |> Retrieval.prefix("z")
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.longest_common_prefix("z")
         {nil, []}
 
   """
-  
-  def prefix!(%Trie{trie: trie}, binary) when is_binary(binary) do
-    _prefix!(trie, binary, binary)
+
+  def longest_common_prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
+    _longest_common_prefix(trie, binary, binary)
   end
 
-  defp _prefix!(trie, <<next, rest :: binary>>, acc) do
+  defp _longest_common_prefix(trie, <<next, rest :: binary>>, acc) do
     case Map.has_key?(trie, next) do
-      true  -> _prefix!(trie[next], rest, acc)
+      true  -> _longest_common_prefix(trie[next], rest, acc)
       false -> {nil, []}
     end
   end
 
-  defp _prefix!(trie, <<>>, acc) do
+  defp _longest_common_prefix(trie, <<>>, acc) do
     case Enum.count(trie) do
       1 ->
-	case Map.keys(trie) do
-	  [:mark] -> {acc, [acc]}
-	  [ch] -> _prefix!(trie[ch], <<>>, acc <> <<ch>>)
-	end
+        case Map.keys(trie) do
+          [:mark] -> {acc, [acc]}
+          [ch] -> _longest_common_prefix(trie[ch], <<>>, acc <> <<ch>>)
+        end
       _ ->
-	matches = _prefix(trie, <<>>, acc)
-	{acc, matches}
+        matches = _prefix(trie, <<>>, acc)
+        {acc, matches}
     end
   end
 
