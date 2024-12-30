@@ -8,6 +8,11 @@ defmodule TrievalTest do
 
   @test_trie Trieval.new(@test_data)
 
+  @payload_trie Enum.map(@test_data, fn item = <<first, _ :: binary>> ->
+    {item, <<first>>}
+  end) |> Trieval.new
+
+
   test "empty trie" do
     assert Trieval.new == %Trieval.Trie{}
   end
@@ -38,6 +43,19 @@ defmodule TrievalTest do
     assert Trieval.pattern(@test_trie, "[^abc]{1}{1}**") == []
     assert Trieval.pattern(@test_trie, "[co]**") == ["cat", "out"]
     assert Trieval.pattern(@test_trie, "{1[^okjh]}x[tnm]{1}*{2}{1}{2}") == ["extended"]
+  end
+
+  test "payload prefix" do
+    assert Trieval.prefix(@payload_trie, "app") == [{"apple", "a"}, {"apply", "a"}]
+    assert Trieval.prefix(@payload_trie, "n")   == [{"negative", "n"}]
+    assert Trieval.prefix(@payload_trie, "abc") == []
+  end
+
+  test "payload pattern" do
+    assert Trieval.pattern(@payload_trie, "*{1}{1}**") == [{"apple", "a"}, {"apply", "a"}]
+    assert Trieval.pattern(@payload_trie, "[^abc]{1}{1}**") == []
+    assert Trieval.pattern(@payload_trie, "[co]**") == [{"cat", "c"}, {"out", "o"}]
+    assert Trieval.pattern(@payload_trie, "{1[^okjh]}x[tnm]{1}*{2}{1}{2}") == [{"extended", "e"}]
   end
 
 end
