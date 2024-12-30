@@ -4,7 +4,8 @@ defmodule TrievalTest do
 
   @test_data ~w/apple apply ape bed between betray cat cold hot
                 warm winter maze smash crush under above people
-                negative poison place out divide zebra extended/
+                negative poison place out divide zebra extended
+                friend friendly fried frieze/
 
   @test_trie Trieval.new(@test_data)
 
@@ -28,6 +29,13 @@ defmodule TrievalTest do
     assert Trieval.prefix(@test_trie, "app") == ["apple", "apply"]
     assert Trieval.prefix(@test_trie, "n")   == ["negative"]
     assert Trieval.prefix(@test_trie, "abc") == []
+  end
+
+  test "longest_common_prefix" do
+    assert Trieval.longest_common_prefix(@test_trie, "fr") == {"frie", ["fried", "friendly", "friend", "frieze"]}
+    assert Trieval.longest_common_prefix(@test_trie, "frien") == {"friend", ["friendly", "friend"]}
+    assert Trieval.longest_common_prefix(@test_trie, "winter") == {"winter", ["winter"]}
+    assert Trieval.longest_common_prefix(@test_trie, "abc") == {nil, []}
   end
 
   test "pattern errors" do

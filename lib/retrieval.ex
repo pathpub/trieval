@@ -153,6 +153,44 @@ defmodule Trieval do
   end
 
   @doc """
+  Collects all binaries that begin with a given prefix. Returns matching binaries, along
+  with matching binaries' longest common prefix. Example use-case would be for auto-completion.
+
+  ## Examples
+
+        Trieval.new(~w/apple apply ape/) |> Trieval.longest_common_prefix("a")
+        {"ap", ["apple", "apply", "ape"]}
+
+        Trieval.new(~w/apple apply ape ample/) |> Trieval.longest_common_prefix("z")
+        {nil, []}
+
+  """
+
+  def longest_common_prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
+    _longest_common_prefix(trie, binary, binary)
+  end
+
+  defp _longest_common_prefix(trie, <<next, rest :: binary>>, acc) do
+    case Map.has_key?(trie, next) do
+      true  -> _longest_common_prefix(trie[next], rest, acc)
+      false -> {nil, []}
+    end
+  end
+
+  defp _longest_common_prefix(trie, <<>>, acc) do
+    case Enum.count(trie) do
+      1 ->
+        case Map.keys(trie) do
+          [:mark] -> {acc, [acc]}
+          [ch] -> _longest_common_prefix(trie[ch], <<>>, acc <> <<ch>>)
+        end
+      _ ->
+        matches = _prefix(trie, <<>>, acc)
+        {acc, matches}
+    end
+  end
+
+  @doc """
   Collects all binaries match a given pattern. Returns either a list of matches
   or an error in the form `{:error, reason}`.
 
