@@ -1,3 +1,11 @@
+
+
+```
+---
+
+[![Build Status](https://github.com/pathpub/trieval/workflows/CI/badge.svg)](https://github.com/pathpub/trieval/actions)
+```
+
 # Trieval
 
 Trieval is a tradional trie implementation in pure Elixir that supports pattern based lookup and a variety
@@ -282,11 +290,11 @@ The following symbols can be escaped:
 | Symbol | Escaped symbol |
 | :----: | :------------: |
 |   \*   |     \\\\\*     |
-|   ^    |     \\\\^      |
-|   [    |     \\\\[      |
-|   ]    |     \\\\]      |
-|   {    |     \\\\{      |
-|   }    |     \\\\}      |
+|   ^   |     \\\\^     |
+|   [   |     \\\\[     |
+|   ]   |     \\\\]     |
+|   {   |     \\\\{     |
+|   }   |     \\\\}     |
 
 And in action:
 
