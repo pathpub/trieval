@@ -25,7 +25,8 @@ defmodule Trieval.MixProject do
   defp deps do
     [
       {:earmark, "~> 1.4", only: :dev},
-      {:ex_doc, "~> 0.35", only: :dev}
+      {:ex_doc, "~> 0.35", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
