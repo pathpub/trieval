@@ -11,22 +11,28 @@ defmodule Trieval.MixProject do
       package: package(),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      source_url: "https://github.com/pathpub/trieval"
     ]
   end
 
   def application do
-    [applications: [:logger]]
+    [
+      extra_applications: [:logger]
+    ]
   end
 
   defp deps do
-    [{:earmark, "~> 1.4", only: :dev}, {:ex_doc, "~> 0.35", only: :dev}]
+    [
+      {:earmark, "~> 1.4", only: :dev},
+      {:ex_doc, "~> 0.35", only: :dev}
+    ]
   end
 
   defp package do
     [
       licenses: ["MIT"],
-      maintainers: ["jimmybot, mdg"],
+      maintainers: ["jimmybot, mdg", "adamark"],
       links: %{github: "https://github.com/pathpub/trieval"}
     ]
   end
