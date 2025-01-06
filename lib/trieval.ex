@@ -1,5 +1,4 @@
 defmodule Trieval do
-
   alias Trieval.Trie
   alias Trieval.PatternParser
 
@@ -63,9 +62,9 @@ defmodule Trieval do
     %Trie{trie: _insert(trie, binary_and_payload)}
   end
 
-  defp _insert(trie, {<<next, rest :: binary>>, payload}) do
+  defp _insert(trie, {<<next, rest::binary>>, payload}) do
     case Map.has_key?(trie, next) do
-      true  -> Map.put(trie, next, _insert(trie[next], {rest, payload}))
+      true -> Map.put(trie, next, _insert(trie[next], {rest, payload}))
       false -> Map.put(trie, next, _insert(%{}, {rest, payload}))
     end
   end
@@ -74,9 +73,9 @@ defmodule Trieval do
     Map.put(trie, :mark, payload)
   end
 
-  defp _insert(trie, <<next, rest :: binary>>) do
+  defp _insert(trie, <<next, rest::binary>>) do
     case Map.has_key?(trie, next) do
-      true  -> Map.put(trie, next, _insert(trie[next], rest))
+      true -> Map.put(trie, next, _insert(trie[next], rest))
       false -> Map.put(trie, next, _insert(%{}, rest))
     end
   end
@@ -102,9 +101,9 @@ defmodule Trieval do
     _contains?(trie, binary)
   end
 
-  defp _contains?(trie, <<next, rest :: binary>>) do
+  defp _contains?(trie, <<next, rest::binary>>) do
     case Map.has_key?(trie, next) do
-      true  -> _contains?(trie[next], rest)
+      true -> _contains?(trie[next], rest)
       false -> false
     end
   end
@@ -134,9 +133,9 @@ defmodule Trieval do
     _prefix(trie, binary, binary)
   end
 
-  defp _prefix(trie, <<next, rest :: binary>>, acc) do
+  defp _prefix(trie, <<next, rest::binary>>, acc) do
     case Map.has_key?(trie, next) do
-      true  -> _prefix(trie[next], rest, acc)
+      true -> _prefix(trie[next], rest, acc)
       false -> []
     end
   end
@@ -170,9 +169,9 @@ defmodule Trieval do
     _longest_common_prefix(trie, binary, binary)
   end
 
-  defp _longest_common_prefix(trie, <<next, rest :: binary>>, acc) do
+  defp _longest_common_prefix(trie, <<next, rest::binary>>, acc) do
     case Map.has_key?(trie, next) do
-      true  -> _longest_common_prefix(trie[next], rest, acc)
+      true -> _longest_common_prefix(trie[next], rest, acc)
       false -> {nil, []}
     end
   end
@@ -184,6 +183,7 @@ defmodule Trieval do
           [:mark] -> {acc, [acc]}
           [ch] -> _longest_common_prefix(trie[ch], <<>>, acc <> <<ch>>)
         end
+
       _ ->
         matches = _prefix(trie, <<>>, acc)
         {acc, matches}
@@ -233,51 +233,57 @@ defmodule Trieval do
   defp _pattern(trie, capture_map, pattern, acc, :parse) do
     case PatternParser.parse(pattern) do
       {:error, message} -> {:error, message}
-      parsed_pattern    -> _pattern(trie, capture_map, parsed_pattern, acc)
+      parsed_pattern -> _pattern(trie, capture_map, parsed_pattern, acc)
     end
   end
 
-  defp _pattern(trie, capture_map, [{:character, ch}|rest], acc) do
+  defp _pattern(trie, capture_map, [{:character, ch} | rest], acc) do
     case Map.has_key?(trie, ch) do
-      true  -> _pattern(trie[ch], capture_map, rest, acc <> <<ch>>)
+      true -> _pattern(trie[ch], capture_map, rest, acc <> <<ch>>)
       false -> []
     end
   end
 
-  defp _pattern(trie, capture_map, [:wildcard|rest], acc) do
+  defp _pattern(trie, capture_map, [:wildcard | rest], acc) do
     Enum.flat_map(trie, fn
       {:mark, _} -> []
       {ch, sub_trie} -> _pattern(sub_trie, capture_map, rest, acc <> <<ch>>)
     end)
   end
 
-  defp _pattern(trie, capture_map, [{:exclusion, exclusions}|rest], acc) do
-    pruned_trie = Enum.filter(trie, fn({k, _v}) -> !(Map.has_key?(exclusions, k)) end)
+  defp _pattern(trie, capture_map, [{:exclusion, exclusions} | rest], acc) do
+    pruned_trie = Enum.filter(trie, fn {k, _v} -> !Map.has_key?(exclusions, k) end)
+
     Enum.flat_map(pruned_trie, fn
       {:mark, _} -> []
       {ch, sub_trie} -> _pattern(sub_trie, capture_map, rest, acc <> <<ch>>)
     end)
   end
 
-  defp _pattern(trie, capture_map, [{:inclusion, inclusions}|rest], acc) do
-    pruned_trie = Enum.filter(trie, fn({k, _v}) -> Map.has_key?(inclusions, k) end)
+  defp _pattern(trie, capture_map, [{:inclusion, inclusions} | rest], acc) do
+    pruned_trie = Enum.filter(trie, fn {k, _v} -> Map.has_key?(inclusions, k) end)
+
     Enum.flat_map(pruned_trie, fn
       {:mark, _} -> []
       {ch, sub_trie} -> _pattern(sub_trie, capture_map, rest, acc <> <<ch>>)
     end)
   end
 
-  defp _pattern(trie, capture_map, [{:capture, name}|rest], acc) do
+  defp _pattern(trie, capture_map, [{:capture, name} | rest], acc) do
     case Map.has_key?(capture_map, name) do
-      true  ->
+      true ->
         match = capture_map[name]
+
         case Map.has_key?(trie, match) do
-          true  -> _pattern(trie[match], capture_map, rest, acc <> <<match>>)
+          true -> _pattern(trie[match], capture_map, rest, acc <> <<match>>)
           false -> []
         end
+
       false ->
         Enum.flat_map(trie, fn
-          {:mark, _} -> []
+          {:mark, _} ->
+            []
+
           {ch, sub_trie} ->
             capture_map = Map.put(capture_map, name, ch)
             _pattern(sub_trie, capture_map, rest, acc <> <<ch>>)
@@ -285,18 +291,23 @@ defmodule Trieval do
     end
   end
 
-  defp _pattern(trie, capture_map, [{:capture, name, :exclusion, exclusions}|rest], acc) do
+  defp _pattern(trie, capture_map, [{:capture, name, :exclusion, exclusions} | rest], acc) do
     case Map.has_key?(capture_map, name) do
-      true  ->
+      true ->
         match = capture_map[name]
+
         case Map.has_key?(trie, match) do
-          true  -> _pattern(trie[match], capture_map, rest, acc <> <<match>>)
+          true -> _pattern(trie[match], capture_map, rest, acc <> <<match>>)
           false -> []
         end
+
       false ->
-        pruned_trie = Enum.filter(trie, fn({k, _v}) -> !(Map.has_key?(exclusions, k)) end)
+        pruned_trie = Enum.filter(trie, fn {k, _v} -> !Map.has_key?(exclusions, k) end)
+
         Enum.flat_map(pruned_trie, fn
-          {:mark, _} -> []
+          {:mark, _} ->
+            []
+
           {ch, sub_trie} ->
             capture_map = Map.put(capture_map, name, ch)
             _pattern(sub_trie, capture_map, rest, acc <> <<ch>>)
@@ -304,18 +315,23 @@ defmodule Trieval do
     end
   end
 
-  defp _pattern(trie, capture_map, [{:capture, name, :inclusion, inclusions}|rest], acc) do
+  defp _pattern(trie, capture_map, [{:capture, name, :inclusion, inclusions} | rest], acc) do
     case Map.has_key?(capture_map, name) do
-      true  ->
+      true ->
         match = capture_map[name]
+
         case Map.has_key?(trie, match) do
-          true  -> _pattern(trie[match], capture_map, rest, acc <> <<match>>)
+          true -> _pattern(trie[match], capture_map, rest, acc <> <<match>>)
           false -> []
         end
+
       false ->
-        pruned_trie = Enum.filter(trie, fn({k, _v}) -> Map.has_key?(inclusions, k) end)
+        pruned_trie = Enum.filter(trie, fn {k, _v} -> Map.has_key?(inclusions, k) end)
+
         Enum.flat_map(pruned_trie, fn
-          {:mark, _} -> []
+          {:mark, _} ->
+            []
+
           {ch, sub_trie} ->
             capture_map = Map.put(capture_map, name, ch)
             _pattern(sub_trie, capture_map, rest, acc <> <<ch>>)
@@ -325,12 +341,14 @@ defmodule Trieval do
 
   defp _pattern(trie, _capture_map, [], acc) do
     case Map.has_key?(trie, :mark) do
-      true  -> case Map.get(trie, :mark) do
-        :mark -> [acc]
-        payload -> [{acc, payload}]
-      end
-      false -> []
+      true ->
+        case Map.get(trie, :mark) do
+          :mark -> [acc]
+          payload -> [{acc, payload}]
+        end
+
+      false ->
+        []
     end
   end
-
 end
