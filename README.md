@@ -1,10 +1,7 @@
 
-
-```
 ---
 
 [![Build Status](https://github.com/pathpub/trieval/workflows/CI/badge.svg)](https://github.com/pathpub/trieval/actions)
-```
 
 # Trieval
 
