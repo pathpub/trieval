@@ -74,7 +74,8 @@ defmodule Trieval do
       %Trieval.Trie{trie: %{...}}
 
   """
-  @spec insert(%Trieval.Trie{trie: map()}, binary() | maybe_improper_list() | {binary(), any()}) :: %Trieval.Trie{trie: map()}
+  @spec insert(%Trieval.Trie{trie: map()}, binary() | maybe_improper_list() | {binary(), any()}) ::
+          %Trieval.Trie{trie: map()}
   def insert(%Trie{trie: trie}, binaries) when is_list(binaries) do
     %Trie{trie: Enum.reduce(binaries, trie, &_insert(&2, &1))}
   end
@@ -189,7 +190,8 @@ defmodule Trieval do
       {nil, []}
 
   """
-  @spec longest_common_prefix(%Trieval.Trie{trie: map()}, binary()) :: {[nil | bitstring()], list()}
+  @spec longest_common_prefix(%Trieval.Trie{trie: map()}, binary()) ::
+          {[nil | bitstring()], list()}
   def longest_common_prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
     _longest_common_prefix(trie, binary, binary)
   end
