@@ -1,5 +1,5 @@
 defmodule TrievalTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Trieval
 
   @test_data ~w/apple apply ape bed between betray cat cold hot
