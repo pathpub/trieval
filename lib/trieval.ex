@@ -18,7 +18,7 @@ defmodule Trieval do
       %Trieval.Trie{trie: %{}}
 
   """
-  @spec new() :: %Trieval.Trie{trie: map()}
+  @spec new() :: Trieval.Trie.t(trie: map())
   def new, do: %Trie{}
 
   @doc """
@@ -49,7 +49,7 @@ defmodule Trieval do
               }
 
   """
-  @spec new(binary() | maybe_improper_list() | {binary(), any()}) :: %Trieval.Trie{trie: map()}
+  @spec new(binary() | maybe_improper_list() | {binary(), any()}) :: Trieval.Trie.t(trie: map())
   def new(binaries) when is_list(binaries) do
     insert(%Trie{}, binaries)
   end
@@ -74,8 +74,8 @@ defmodule Trieval do
       %Trieval.Trie{trie: %{...}}
 
   """
-  @spec insert(%Trieval.Trie{trie: map()}, binary() | maybe_improper_list() | {binary(), any()}) ::
-          %Trieval.Trie{trie: map()}
+  @spec insert(Trieval.Trie.t(trie: map()), binary() | maybe_improper_list() | {binary(), any()}) ::
+          Trieval.Trie.t(trie: map())
   def insert(%Trie{trie: trie}, binaries) when is_list(binaries) do
     %Trie{trie: Enum.reduce(binaries, trie, &_insert(&2, &1))}
   end
@@ -122,7 +122,7 @@ defmodule Trieval do
       false
 
   """
-  @spec contains?(%Trieval.Trie{trie: map()}, binary()) :: boolean()
+  @spec contains?(Trieval.Trie.t(trie: map()), binary()) :: boolean()
   def contains?(%Trie{trie: trie}, binary) when is_binary(binary) do
     _contains?(trie, binary)
   end
@@ -154,7 +154,7 @@ defmodule Trieval do
       []
 
   """
-  @spec prefix(%Trieval.Trie{trie: map()}, binary()) :: list()
+  @spec prefix(Trieval.Trie.t(trie: map()), binary()) :: list()
   def prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
     _prefix(trie, binary, binary)
   end
@@ -190,7 +190,7 @@ defmodule Trieval do
       {nil, []}
 
   """
-  @spec longest_common_prefix(%Trieval.Trie{trie: map()}, binary()) ::
+  @spec longest_common_prefix(Trieval.Trie.t(trie: map()), binary()) ::
           {[nil | bitstring()], list()}
   def longest_common_prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
     _longest_common_prefix(trie, binary, binary)
@@ -252,7 +252,7 @@ defmodule Trieval do
       {:error, "Dangling group (exclusion) starting at column 8, expecting ]"}
 
   """
-  @spec pattern(%Trieval.Trie{trie: map()}, binary()) :: list() | {:error, <<_::64, _::_*8>>}
+  @spec pattern(Trieval.Trie.t(trie: map()), binary()) :: list() | {:error, <<_::64, _::_*8>>}
   def pattern(%Trie{trie: trie}, pattern) when is_binary(pattern) do
     _pattern(trie, %{}, pattern, <<>>, :parse)
   end
