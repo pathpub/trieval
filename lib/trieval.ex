@@ -3,28 +3,53 @@ defmodule Trieval do
   alias Trieval.PatternParser
 
   @moduledoc """
-  Provides an interface for creating and collecting data from the trie data structure.
+  Trieval provides an interface for creating and managing trie data structures. A trie, also known as a prefix tree, is a type of search tree used to store associative data structures.
+
+  This module provides functions to create new tries, insert values, and perform various operations on the trie. It supports creating tries from binaries, lists of binaries, and tuples of binaries.
   """
 
   @doc """
-  Returns a new trie. Providing no arguments creates an empty trie. Optionally a binary or
-  list of binaries can be passed to `new/1`.
+  Returns a new trie. Providing no arguments creates an empty trie.
+  Optionally, a binary, a list of binaries or a tuple of binaries can be passed to `new/1`.
 
   ## Examples
 
-        Trieval.new
-        %Trieval.Trie{...}
-
-        Trieval.new("apple")
-        %Trieval.Trie{...}
-
-        Trieval.new(~w/apple apply ape ample/)
-        %Trieval.Trie{...}
+      iex> Trieval.new()
+      %Trieval.Trie{trie: %{}}
 
   """
-
+  @spec new() :: Trieval.Trie.t(trie: map())
   def new, do: %Trie{}
 
+  @doc """
+  Returns a new trie containing lists of binaries representing the provided values passed to `new/1`.
+  Optional values are a binary, a list of binaries or a tuple of binaries can be passed to `new/1`.
+
+  ## Examples
+
+      iex> Trieval.new("apple")
+      %Trieval.Trie{trie: %{97 => %{112 => %{112 => %{108 => %{101 => %{mark: :mark}}}}}}}
+
+      iex> Trieval.new(~w/apple apply ape ample/)
+      %Trieval.Trie{
+                trie: %{
+                  97 => %{
+                    109 => %{112 => %{108 => %{101 => %{mark: :mark}}}},
+                    112 => %{
+                      101 => %{mark: :mark},
+                      112 => %{
+                        108 => %{
+                          101 => %{mark: :mark},
+                          121 => %{mark: :mark}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+  """
+  @spec new(binary() | maybe_improper_list() | {binary(), any()}) :: Trieval.Trie.t(trie: map())
   def new(binaries) when is_list(binaries) do
     insert(%Trie{}, binaries)
   end
@@ -38,18 +63,19 @@ defmodule Trieval do
   end
 
   @doc """
-  Inserts a binary or list of binaries into an existing trie.
+  Inserts a binary, list of binaries or tuple of binaries into an existing trie.
 
   ## Examples
 
-        Trieval.new |> Trieval.insert("apple")
-        %Trieval.Trie{...}
+      iex> Trieval.new() |> Trieval.insert("apple")
+      %Trieval.Trie{trie: %{97 => %{112 => %{112 => %{108 => %{101 => %{mark: :mark}}}}}}}
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.insert(~w/zebra corgi/)
-        %Trieval.Trie{...}
+      Trieval.new(~w/apple apply ape ample/) |> Trieval.insert(~w/zebra corgi/)
+      %Trieval.Trie{trie: %{...}}
 
   """
-
+  @spec insert(Trieval.Trie.t(trie: map()), binary() | maybe_improper_list() | {binary(), any()}) ::
+          Trieval.Trie.t(trie: map())
   def insert(%Trie{trie: trie}, binaries) when is_list(binaries) do
     %Trie{trie: Enum.reduce(binaries, trie, &_insert(&2, &1))}
   end
@@ -89,14 +115,14 @@ defmodule Trieval do
 
   ## Examples
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.contains?("apple")
-        true
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.contains?("apple")
+      true
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.contains?("zebra")
-        false
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.contains?("zebra")
+      false
 
   """
-
+  @spec contains?(Trieval.Trie.t(trie: map()), binary()) :: boolean()
   def contains?(%Trie{trie: trie}, binary) when is_binary(binary) do
     _contains?(trie, binary)
   end
@@ -121,14 +147,14 @@ defmodule Trieval do
 
   ## Examples
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.prefix("ap")
-        ["apple", "apply", "ape"]
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.prefix("ap")
+      ["ape", "apple", "apply"]
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.prefix("z")
-        []
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.prefix("z")
+      []
 
   """
-
+  @spec prefix(Trieval.Trie.t(trie: map()), binary()) :: list()
   def prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
     _prefix(trie, binary, binary)
   end
@@ -157,14 +183,15 @@ defmodule Trieval do
 
   ## Examples
 
-        Trieval.new(~w/apple apply ape/) |> Trieval.longest_common_prefix("a")
-        {"ap", ["apple", "apply", "ape"]}
+      iex> Trieval.new(~w/apple apply ape/) |> Trieval.longest_common_prefix("a")
+      {"ap", ["ape", "apple", "apply"]}
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.longest_common_prefix("z")
-        {nil, []}
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.longest_common_prefix("z")
+      {nil, []}
 
   """
-
+  @spec longest_common_prefix(Trieval.Trie.t(trie: map()), binary()) ::
+          {[nil | bitstring()], list()}
   def longest_common_prefix(%Trie{trie: trie}, binary) when is_binary(binary) do
     _longest_common_prefix(trie, binary, binary)
   end
@@ -209,23 +236,23 @@ defmodule Trieval do
 
   ## Examples
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.pattern("a{1}{1}**")
-        ["apple", "apply"]
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.pattern("a{1}{1}**")
+      ["apple", "apply"]
 
-        Trieval.new(~w/apple apply ape ample/) |> Trieval.pattern("*{1[^p]}{1}**")
-        []
+      iex> Trieval.new(~w/apple apply ape ample/) |> Trieval.pattern("*{1[^p]}{1}**")
+      []
 
-        Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]****")
-        ["house", "zebra"]
+      iex> Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]****")
+      ["house", "zebra"]
 
-        Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]***[^ea]")
-        []
+      iex> Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]***[^ea]")
+      []
 
-        Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]***[^ea")
-        {:error, "Dangling group (exclusion) starting at column 8, expecting ]"}
+      iex> Trieval.new(~w/apple apply zebra house/) |> Trieval.pattern("[hz]***[^ea")
+      {:error, "Dangling group (exclusion) starting at column 8, expecting ]"}
 
   """
-
+  @spec pattern(Trieval.Trie.t(trie: map()), binary()) :: list() | {:error, <<_::64, _::_*8>>}
   def pattern(%Trie{trie: trie}, pattern) when is_binary(pattern) do
     _pattern(trie, %{}, pattern, <<>>, :parse)
   end
