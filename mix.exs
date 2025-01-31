@@ -5,7 +5,7 @@ defmodule Trieval.MixProject do
     [
       app: :trieval,
       version: "1.0.0",
-      elixir: "~> 1.17",
+      elixir: "~> 1.18",
       description:
         "Trie implementation in pure Elixir that supports pattern based lookup and other functionality.",
       package: package(),
@@ -25,7 +25,7 @@ defmodule Trieval.MixProject do
   defp deps do
     [
       {:earmark, "~> 1.4", only: :dev},
-      {:ex_doc, "~> 0.35", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.36", only: :dev, runtime: false},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
