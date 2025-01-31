@@ -1,6 +1,4 @@
-
 ---
-
 [![Build Status](https://github.com/pathpub/trieval/workflows/CI/badge.svg)](https://github.com/pathpub/trieval/actions)
 
 # Trieval
@@ -14,6 +12,7 @@ of other functionality. Documentation can be found [HERE](https://hexdocs.pm/tri
   - [Insertion](#insertion)
   - [Key membership](#checking-for-key-membership)
   - [Prefix lookup](#prefix-lookup)
+  - [Longest common prefix lookup](#longest-common-prefix-lookup)
   - [Pattern lookup](#pattern-lookup)
     - [Wildcard](#wildcard)
     - [Inclusion group](#inclusion-group)
@@ -100,6 +99,20 @@ Trieval.prefix(trie, "be")
 
 Trieval.prefix(trie, "th")
 []
+```
+
+##### Longest common prefix lookup
+
+Similar to the above `prefix/2` function but in this case we return a tuple containing
+the longest common prefix found and a list of all words that share this prefix.
+An example use-case for this would be an auto-completion feature in a text input field.
+
+```elixir
+Trieval.new(~w/apple apply ape/) |> Trieval.longest_common_prefix("a")
+{"ap", ["ape", "apple", "apply"]}
+
+Trieval.new(~w/apple apply ape ample/) |> Trieval.longest_common_prefix("z")
+{nil, []}
 ```
 
 ##### Pattern lookup
@@ -325,3 +338,4 @@ Updated by the team at [pathpub](https://path.pub)
 This work is free. You can redistribute it and/or modify it under the
 terms of the MIT License. See the LICENSE file for more details.
 ```
+---
