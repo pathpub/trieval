@@ -1,10 +1,10 @@
 ---
-[![Build Status](https://github.com/pathpub/trieval/workflows/CI/badge.svg)](https://github.com/pathpub/trieval/actions)
+[![Build Status](https://github.com/pathpub/trieval/workflows/CI/badge.svg)](https://github.com/pathpub/trieval/actions) [![Hex.pm](https://img.shields.io/hexpm/v/trieval.svg)](https://hex.pm/packages/trieval) [![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/trieval/Trieval.html)
 
 # Trieval
 
 Trieval is a tradional trie implementation in pure Elixir that supports pattern based lookup and a variety
-of other functionality. Documentation can be found [HERE](https://hexdocs.pm/trieval/Trieval.html).
+of other functionality.
 
 - [Installation](#installation)
 - [Usage](#usage)
