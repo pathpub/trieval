@@ -27,7 +27,7 @@ Add Trieval to your `mix.exs` dependencies:
 
 ```elixir
 def deps do
-  [{:trieval, "~> 1.0.0"}]
+  [{:trieval, "~> 1.1.0"}]
 end
 ```
 
