@@ -3,8 +3,10 @@
 
 # Trieval
 
-Trieval is a tradional trie implementation in pure Elixir that supports pattern based lookup and a variety
-of other functionality.
+Trieval is a tradional trie implementation in pure Elixir that supports fast,
+efficient pattern based in-memory lookups and a variety of other functionality.
+This library can be the basis of an autosuggest service or a component of a
+search service.
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -35,8 +37,9 @@ end
 
 ##### Creating a new trie
 
-There's three ways to create a new trie struct. Provide zero arguments to create an empty trie,
-provide a binary key or list of binary keys to create a trie with nodes.
+There are three ways to create a new trie struct. Provide zero arguments to
+create an empty trie, provide a binary key or list of binary keys to create a
+trie with nodes.
 
 ```elixir
 Trieval.new
@@ -332,7 +335,7 @@ Trieval.new(~w/*ab [x*/) |> Trieval.pattern("[*]**")
 
 Originally Retrieval, written by [Rob-bie](https://github.com/Rob-bie/retrieval/)
 
-Updated by the team at [pathpub](https://path.pub)
+Updated by the team at [path.pub](https://path.pub)
 
 ```
 This work is free. You can redistribute it and/or modify it under the
